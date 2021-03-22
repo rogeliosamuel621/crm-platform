@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as argon2 from 'argon2';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/user.dto';
 import { UserDocument } from './schemas/user.schema';
@@ -15,7 +16,7 @@ export class UserService {
   async create(
     createUserDto: CreateUserDto,
   ): Promise<{ id: string; name: string }> {
-    const { email } = createUserDto;
+    const { email, password } = createUserDto;
 
     // check if a user with the email is already registered
     const isEmailAlreadyInUse = await this.userModel.findOne({ email });
@@ -25,8 +26,14 @@ export class UserService {
       );
     }
 
+    // hash the password
+    const passwordHashed = await this.hashPassword(password);
+
     // create a new user object
-    const user = new this.userModel({ ...createUserDto });
+    const user = new this.userModel({
+      ...createUserDto,
+      password: passwordHashed,
+    });
 
     // save in database
     user.save((err) => {
@@ -37,5 +44,9 @@ export class UserService {
       id: user.id,
       name: user.name,
     };
+  }
+
+  private async hashPassword(plainPass: string): Promise<string> {
+    return await argon2.hash(plainPass);
   }
 }
