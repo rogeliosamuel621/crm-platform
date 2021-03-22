@@ -27,6 +27,7 @@ export class AuthenticationService {
         data: token,
       };
     } catch (error) {
+      console.log(error);
       return {
         status: 'fail',
         statusCode: error.response.statusCode,
