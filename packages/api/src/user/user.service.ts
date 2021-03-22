@@ -6,8 +6,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import * as argon2 from 'argon2';
 import { Model } from 'mongoose';
-import { CreateUserDto } from './dto/user.dto';
-import { UserDocument } from './schemas/user.schema';
+import { CreateUserDto, UserCredentialsDto } from './dto/user.dto';
+import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UserService {
@@ -39,6 +39,29 @@ export class UserService {
     user.save((err) => {
       if (err) throw new InternalServerErrorException(err.message);
     });
+
+    return {
+      id: user.id,
+      name: user.name,
+    };
+  }
+
+  async validate(
+    userCredentialsDto: UserCredentialsDto,
+  ): Promise<{ id: string; name: string }> {
+    const { email, password } = userCredentialsDto;
+
+    // verify that the user exists
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new BadRequestException('The credentials entered are incorrect');
+    }
+
+    // verify password matches
+    const isPasswordMatch = await argon2.verify(user.password, password);
+    if (!isPasswordMatch) {
+      throw new BadRequestException('The credentials entered are incorrect');
+    }
 
     return {
       id: user.id,

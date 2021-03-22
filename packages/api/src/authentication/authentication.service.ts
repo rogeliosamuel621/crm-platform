@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceResponse } from 'src/interfaces/ServiceResponse';
 import { UserService } from 'src/user/user.service';
-import { AuthRegisterDto } from './dto/authentication.dto';
+import { AuthCredentialsDto, AuthRegisterDto } from './dto/authentication.dto';
 import { JwtPayload } from './interfaces/jwtPayload.interface';
 
 @Injectable()
@@ -11,6 +11,27 @@ export class AuthenticationService {
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
+
+  async validate(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<ServiceResponse> {
+    try {
+      // validate the user
+      const user = await this.userService.validate(authCredentialsDto);
+
+      // generate a token
+      const payload: JwtPayload = { ...user };
+      const token = await this.jwtService.sign(payload);
+
+      return { status: 'success', statusCode: HttpStatus.OK, data: token };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
 
   async register(authRegisterDto: AuthRegisterDto): Promise<ServiceResponse> {
     try {
@@ -27,7 +48,6 @@ export class AuthenticationService {
         data: token,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 'fail',
         statusCode: error.response.statusCode,

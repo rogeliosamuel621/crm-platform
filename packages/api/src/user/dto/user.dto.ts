@@ -15,3 +15,15 @@ export class CreateUserDto {
   })
   password: string;
 }
+
+export class UserCredentialsDto {
+  @IsNotEmpty({ message: 'The $property is empty' })
+  @IsEmail({}, { message: 'the $property is not an email, $value' })
+  email: string;
+
+  @IsString({ message: 'The $property is not a string' })
+  @MinLength(6, {
+    message: '$property is too short',
+  })
+  password: string;
+}
