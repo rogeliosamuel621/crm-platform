@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ServiceResponse } from 'src/interfaces/ServiceResponse';
-import { CreateCustomerDto } from './dto/customer.dto';
+import { CreateCustomerDto, UpdateCustomerDto } from './dto/customer.dto';
 import { Customer, CustomerDocument } from './schemas/customer.schema';
 
 @Injectable()
@@ -86,6 +86,48 @@ export class CustomerService {
         status: 'success',
         statusCode: HttpStatus.OK,
         data: customer,
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
+
+  async update(
+    id: string,
+    userId: string,
+    updateCustomerDto: UpdateCustomerDto,
+  ): Promise<ServiceResponse> {
+    try {
+      // get a customer by id
+      const customer = await this.customerModel.findOne({ _id: id });
+
+      // check if the customer exists
+      if (!customer) {
+        throw new NotFoundException('Customer not found');
+      }
+
+      // check if the user is the owner
+      if (customer.owner.toString() !== userId) {
+        throw new UnauthorizedException(
+          'You are not authorized to perform this operation',
+        );
+      }
+
+      // update the customer
+      const updatedCustomer = await this.customerModel.findOneAndUpdate(
+        { _id: customer.id },
+        { ...updateCustomerDto },
+        { new: true },
+      );
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: updatedCustomer,
       };
     } catch (error) {
       return {

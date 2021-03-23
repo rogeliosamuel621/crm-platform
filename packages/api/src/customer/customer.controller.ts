@@ -6,13 +6,14 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/authentication/decorators/getUser.decorator';
 import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/customer.dto';
+import { CreateCustomerDto, UpdateCustomerDto } from './dto/customer.dto';
 
 @Controller('customer')
 @UseGuards(AuthGuard())
@@ -59,6 +60,23 @@ export class CustomerController {
       data,
       error,
     } = await this.customerService.findOne(id, user.id);
+
+    return res.status(statusCode).json({ response: status, data, error });
+  }
+
+  @Put(':id')
+  async update(
+    @GetUser() user,
+    @Param('id') id: string,
+    @Body() updateCustomerDto: UpdateCustomerDto,
+    @Res() res: Response,
+  ) {
+    const {
+      status,
+      statusCode,
+      data,
+      error,
+    } = await this.customerService.update(id, user.id, updateCustomerDto);
 
     return res.status(statusCode).json({ response: status, data, error });
   }
