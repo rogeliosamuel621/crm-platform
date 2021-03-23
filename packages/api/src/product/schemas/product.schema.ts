@@ -20,6 +20,9 @@ export class Product {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   owner: mongoose.Types.ObjectId;
+
+  @Prop({ type: Date, default: Date.now() })
+  createdAt: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
