@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
 
 export type CustomerDocument = Customer & Document;
 
@@ -20,7 +19,7 @@ export class Customer {
   email: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  owner: User;
+  owner: mongoose.Types.ObjectId;
 
   @Prop({ type: Date, default: Date.now() })
   createdAt: Date;

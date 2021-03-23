@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ServiceResponse } from 'src/interfaces/ServiceResponse';
+import { User } from 'src/user/schemas/user.schema';
 import { CreateCustomerDto } from './dto/customer.dto';
 import { Customer, CustomerDocument } from './schemas/customer.schema';
 
@@ -29,6 +30,27 @@ export class CustomerService {
         status: 'success',
         statusCode: HttpStatus.CREATED,
         data: customer,
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
+
+  async findAll(userId: string): Promise<ServiceResponse> {
+    try {
+      // get customers of the current user
+      const customers = await this.customerModel.find({
+        owner: userId,
+      });
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: customers || [],
       };
     } catch (error) {
       return {

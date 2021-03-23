@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/authentication/decorators/getUser.decorator';
 import { CustomerService } from './customer.service';
@@ -22,6 +22,19 @@ export class CustomerController {
       data,
       error,
     } = await this.customerService.create(createCustomerDto, user.id);
+
+    return res.status(statusCode).json({ response: status, data, error });
+  }
+
+  @Get()
+  @UseGuards(AuthGuard())
+  async findAll(@GetUser() user, @Res() res: Response) {
+    const {
+      status,
+      statusCode,
+      data,
+      error,
+    } = await this.customerService.findAll(user.id);
 
     return res.status(statusCode).json({ response: status, data, error });
   }
