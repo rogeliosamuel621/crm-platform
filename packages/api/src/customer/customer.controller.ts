@@ -2,6 +2,7 @@ import { Response } from 'express';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -47,13 +48,29 @@ export class CustomerController {
   }
 
   @Get(':id')
-  async findOne(@GetUser() user, @Param() params, @Res() res: Response) {
+  async findOne(
+    @GetUser() user,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
     const {
       status,
       statusCode,
       data,
       error,
-    } = await this.customerService.findOne(params.id, user.id);
+    } = await this.customerService.findOne(id, user.id);
+
+    return res.status(statusCode).json({ response: status, data, error });
+  }
+
+  @Delete(':id')
+  async remove(@GetUser() user, @Param('id') id: string, @Res() res: Response) {
+    const {
+      status,
+      statusCode,
+      data,
+      error,
+    } = await this.customerService.remove(id, user.id);
 
     return res.status(statusCode).json({ response: status, data, error });
   }
