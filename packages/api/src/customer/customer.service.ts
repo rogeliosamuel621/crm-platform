@@ -1,4 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ServiceResponse } from 'src/interfaces/ServiceResponse';
@@ -53,6 +58,38 @@ export class CustomerService {
         data: customers || [],
       };
     } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
+
+  async findOne(id: string, userId: string): Promise<ServiceResponse> {
+    try {
+      // get a customer by id
+      const customer = await this.customerModel.findOne({ _id: id });
+
+      // check if the customer exists
+      if (!customer) {
+        throw new NotFoundException('Customer not found');
+      }
+
+      // check if the user is the owner
+      if (customer.owner.toString() !== userId) {
+        throw new UnauthorizedException(
+          'You are not authorized to perform this operation',
+        );
+      }
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: customer,
+      };
+    } catch (error) {
+      console.log(error);
       return {
         status: 'fail',
         statusCode: error.response.statusCode,
