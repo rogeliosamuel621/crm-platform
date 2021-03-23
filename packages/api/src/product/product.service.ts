@@ -38,4 +38,23 @@ export class ProductService {
       };
     }
   }
+
+  async findAll(userId: string): Promise<ServiceResponse> {
+    try {
+      // get the products of the current user
+      const products = await this.productModel.find({ owner: userId });
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: products || [],
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
 }
