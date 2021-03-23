@@ -14,11 +14,11 @@ import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/customer.dto';
 
 @Controller('customer')
+@UseGuards(AuthGuard())
 export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
   @Post()
-  @UseGuards(AuthGuard())
   async create(
     @GetUser() user,
     @Body() createCustomerDto: CreateCustomerDto,
@@ -35,7 +35,6 @@ export class CustomerController {
   }
 
   @Get()
-  @UseGuards(AuthGuard())
   async findAll(@GetUser() user, @Res() res: Response) {
     const {
       status,
@@ -48,7 +47,6 @@ export class CustomerController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard())
   async findOne(@GetUser() user, @Param() params, @Res() res: Response) {
     const {
       status,
