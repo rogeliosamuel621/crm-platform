@@ -37,7 +37,7 @@ export class CustomerController {
   }
 
   @Get()
-  async findAll(@GetUser() user, @Res() res: Response) {
+  async findAll(@GetUser() user, @Res() res: Response): Promise<Response> {
     const {
       status,
       statusCode,
@@ -53,7 +53,7 @@ export class CustomerController {
     @GetUser() user,
     @Param('id') id: string,
     @Res() res: Response,
-  ) {
+  ): Promise<Response> {
     const {
       status,
       statusCode,
@@ -70,7 +70,7 @@ export class CustomerController {
     @Param('id') id: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
     @Res() res: Response,
-  ) {
+  ): Promise<Response> {
     const {
       status,
       statusCode,
@@ -82,7 +82,11 @@ export class CustomerController {
   }
 
   @Delete(':id')
-  async remove(@GetUser() user, @Param('id') id: string, @Res() res: Response) {
+  async remove(
+    @GetUser() user,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ): Promise<Response> {
     const {
       status,
       statusCode,
