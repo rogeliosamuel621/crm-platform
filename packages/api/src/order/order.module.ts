@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
+import { Customer, CustomerSchema } from 'src/customer/schemas/customer.schema';
+import { Product, ProductSchema } from 'src/product/schemas/product.schema';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { Order, OrderSchema } from './schemas/order.schema';
@@ -12,6 +14,14 @@ import { Order, OrderSchema } from './schemas/order.schema';
       {
         name: Order.name,
         schema: OrderSchema,
+      },
+      {
+        name: Customer.name,
+        schema: CustomerSchema,
+      },
+      {
+        name: Product.name,
+        schema: ProductSchema,
       },
     ]),
   ],

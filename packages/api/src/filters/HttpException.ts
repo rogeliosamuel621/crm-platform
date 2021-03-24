@@ -15,9 +15,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const message = exception.getResponse();
 
+    const errors = message['message'].toString().split(',');
+    const fixedErrors = errors.map((err: string): string => {
+      console.log(err.split('.').length);
+      if (err.split('.').length === 3) {
+        console.log(err.split('.')[2]);
+        return err.split('.')[2];
+      }
+      return err;
+    });
+
     response.status(status).json({
       response: 'fail',
-      error: message['message'].toString().split(','),
+      error: fixedErrors,
     });
   }
 }

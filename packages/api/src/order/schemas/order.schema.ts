@@ -19,11 +19,7 @@ export class Order {
   })
   status: string;
 
-  // I DONT KNOW IF THIS THING WORKS
-  @Prop([
-    { type: Number, required: true, min: 0 },
-    { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-  ])
+  // TODO - I NEED TO FIX THIS
   products: [{ quantity: number; product: mongoose.Types.ObjectId }];
 
   @Prop({
