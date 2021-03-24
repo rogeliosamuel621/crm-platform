@@ -93,4 +93,38 @@ export class ProductService {
       };
     }
   }
+
+  async remove(id: string, userId: string): Promise<ServiceResponse> {
+    try {
+      // get a product by id
+      const product = await this.productModel.findOne({ _id: id });
+
+      // check if the product exists
+      if (!product) {
+        throw new NotFoundException('Product not found');
+      }
+
+      // check if the user is the owner of the product
+      if (product.owner.toString() !== userId) {
+        throw new UnauthorizedException(
+          'You are not authorized to perform this operation',
+        );
+      }
+
+      // remove the product
+      await this.productModel.findOneAndRemove({ _id: product.id });
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: 'Product deleted successfully',
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
 }

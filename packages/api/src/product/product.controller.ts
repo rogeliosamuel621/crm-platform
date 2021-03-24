@@ -2,6 +2,7 @@ import { Response } from 'express';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -58,6 +59,22 @@ export class ProductController {
       data,
       error,
     } = await this.productService.findOne(id, user.id);
+
+    return res.status(statusCode).json({ response: status, data, error });
+  }
+
+  @Delete(':id')
+  async remove(
+    @GetUser() user,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const {
+      status,
+      statusCode,
+      data,
+      error,
+    } = await this.productService.remove(id, user.id);
 
     return res.status(statusCode).json({ response: status, data, error });
   }
