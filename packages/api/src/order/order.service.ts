@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -12,7 +7,7 @@ import {
 } from 'src/customer/schemas/customer.schema';
 import { ServiceResponse } from 'src/interfaces/ServiceResponse';
 import { Product, ProductDocument } from 'src/product/schemas/product.schema';
-import { CreateOrderDto, OrderedProduct } from './dto/order.dto';
+import { CreateOrderDto } from './dto/order.dto';
 import { Order, OrderDocument } from './schemas/order.schema';
 
 @Injectable()
@@ -59,7 +54,6 @@ export class OrderService {
         data: order,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 'fail',
         statusCode: error.response.statusCode,
