@@ -36,7 +36,7 @@ export class OrderService {
         const isProductFound = await this.productModel.findOne({
           _id: item.product,
         });
-
+        // TODO - DECREASE THE VALUE OF STOCK OF EACH PRODUCT
         if (!isProductFound) {
           throw new BadRequestException('The product entered does not exist');
         }
