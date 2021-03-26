@@ -33,7 +33,7 @@ export class CreateOrderDto {
   @Min(1)
   total: number;
 
-  @IsIn(['PENDING', 'IN PROGRESS', 'COMPLETED'], {
+  @IsIn(['PENDING', 'IN PROGRESS', 'COMPLETED', 'CANCELLED'], {
     message: 'The $value is not a valid $property',
   })
   status: string;

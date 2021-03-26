@@ -5,14 +5,14 @@ import { Customer, CustomerSchema } from 'src/customer/schemas/customer.schema';
 import { Product, ProductSchema } from 'src/product/schemas/product.schema';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
-import { Order, OrderSchema } from './schemas/order.schema';
+import { OrderSchema } from './schemas/order.schema';
 
 @Module({
   imports: [
     AuthenticationModule,
     MongooseModule.forFeature([
       {
-        name: Order.name,
+        name: 'Order',
         schema: OrderSchema,
       },
       {

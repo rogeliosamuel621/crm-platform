@@ -8,12 +8,12 @@ import {
 import { ServiceResponse } from 'src/interfaces/ServiceResponse';
 import { Product, ProductDocument } from 'src/product/schemas/product.schema';
 import { CreateOrderDto } from './dto/order.dto';
-import { Order, OrderDocument } from './schemas/order.schema';
+import { OrderDocument } from './schemas/order.schema';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+    @InjectModel('Order') private orderModel: Model<OrderDocument>,
     @InjectModel(Customer.name) private customerModel: Model<CustomerDocument>,
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
   ) {}

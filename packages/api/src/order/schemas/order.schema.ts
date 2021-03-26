@@ -1,43 +1,49 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 
-export type OrderDocument = Order & Document;
+export type OrderDocument = Document;
 
-@Schema()
-export class Order {
-  @Prop({ type: String, required: true })
-  name: string;
-
-  @Prop({ type: Number, min: 0, required: true })
-  total: number;
-
-  @Prop({
+export const OrderSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  total: {
+    type: String,
+    required: true,
+    min: 0,
+  },
+  status: {
     type: String,
     default: 'PENDING',
-    enum: ['PENDING', 'IN PROGRESS', 'COMPLETED'],
-  })
-  status: string;
-
-  // TODO - I NEED TO FIX THIS
-  products: [{ quantity: number; product: mongoose.Types.ObjectId }];
-
-  @Prop({
+    enum: ['PENDING', 'IN PROGRESS', 'COMPLETED', 'CANCELLED'],
+  },
+  products: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+    },
+  ],
+  customer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Customer',
     required: true,
-  })
-  customer: mongoose.Types.ObjectId;
-
-  @Prop({
+  },
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-  })
-  owner: mongoose.Types.ObjectId;
-
-  @Prop({ type: Date, default: Date.now() })
-  createdAt: Date;
-}
-
-export const OrderSchema = SchemaFactory.createForClass(Order);
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
