@@ -21,7 +21,7 @@ export class Order {
   status: string;
 
   // TODO - I NEED TO FIX THIS
-  @Prop({ type: [OrderedProduct] })
+  @Prop({ type: () => [OrderedProduct] })
   products: OrderedProduct[];
 
   @Prop({
