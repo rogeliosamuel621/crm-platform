@@ -31,15 +31,26 @@ export class OrderService {
         throw new BadRequestException('The customer entered does not exist');
       }
 
-      // check if the products exists
       for (const item of [...createOrderDto.products]) {
+        // check if the products exists
         const isProductFound = await this.productModel.findOne({
           _id: item.id,
         });
-        // TODO - DECREASE THE VALUE OF STOCK OF EACH PRODUCT
         if (!isProductFound) {
           throw new BadRequestException('The product entered does not exist');
         }
+
+        // decrease the value of the stock
+        if (isProductFound.stock < item.quantity) {
+          throw new BadRequestException(
+            'The product does not have enough stock',
+          );
+        }
+
+        await this.productModel.findOneAndUpdate(
+          { _id: item.id },
+          { stock: (isProductFound.stock -= item.quantity) },
+        );
       }
 
       // create an instance of a order
