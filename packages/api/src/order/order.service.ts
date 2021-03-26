@@ -41,7 +41,7 @@ export class OrderService {
           throw new BadRequestException('The product entered does not exist');
         }
       }
-
+      console.log(createOrderDto.products);
       // create an instance of a order
       const order = new this.orderModel({ ...createOrderDto, owner: userId });
 
@@ -54,6 +54,7 @@ export class OrderService {
         data: order,
       };
     } catch (error) {
+      console.log(error);
       return {
         status: 'fail',
         statusCode: error.response.statusCode,

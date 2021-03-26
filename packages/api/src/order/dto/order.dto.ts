@@ -40,7 +40,6 @@ export class CreateOrderDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => OrderedProduct)
   products: OrderedProduct[];
 
   @IsMongoId({ message: 'The $property is not a valid value' })
