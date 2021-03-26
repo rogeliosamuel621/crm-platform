@@ -11,7 +11,7 @@ import {
 
 export class OrderedProduct {
   @IsMongoId({ message: 'The $property is not a valid value' })
-  product: string;
+  id: string;
 
   @Type(() => Number)
   @IsNumber(

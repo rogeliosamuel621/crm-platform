@@ -34,7 +34,7 @@ export class OrderService {
       // check if the products exists
       for (const item of [...createOrderDto.products]) {
         const isProductFound = await this.productModel.findOne({
-          _id: item.product,
+          _id: item.id,
         });
         // TODO - DECREASE THE VALUE OF STOCK OF EACH PRODUCT
         if (!isProductFound) {
@@ -54,7 +54,6 @@ export class OrderService {
         data: order,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 'fail',
         statusCode: error.response.statusCode,
