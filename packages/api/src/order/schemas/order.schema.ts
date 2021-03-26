@@ -1,7 +1,20 @@
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 
-export type OrderDocument = Document;
+export interface OrderDocument extends Document {
+  name: string;
+  total: number;
+  status: 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  products: [
+    {
+      product: string;
+      quantity: number;
+    },
+  ];
+  customer: string;
+  owner: string;
+  createdAt: Date;
+}
 
 export const OrderSchema = new mongoose.Schema({
   name: {
@@ -9,7 +22,7 @@ export const OrderSchema = new mongoose.Schema({
     required: true,
   },
   total: {
-    type: String,
+    type: Number,
     required: true,
     min: 0,
   },
