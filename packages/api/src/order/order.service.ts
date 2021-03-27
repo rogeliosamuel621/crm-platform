@@ -6,14 +6,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, mongo } from 'mongoose';
 import {
   Customer,
   CustomerDocument,
 } from 'src/customer/schemas/customer.schema';
 import { ServiceResponse } from 'src/interfaces/ServiceResponse';
 import { Product, ProductDocument } from 'src/product/schemas/product.schema';
-import { CreateOrderDto } from './dto/order.dto';
+import { CreateOrderDto, UpdateOrderDto } from './dto/order.dto';
 import { OrderDocument } from './schemas/order.schema';
 
 @Injectable()
@@ -119,6 +119,108 @@ export class OrderService {
         data: order,
       };
     } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
+
+  async update(
+    id: string,
+    userId: string,
+    updateOrderDto: UpdateOrderDto,
+  ): Promise<ServiceResponse> {
+    try {
+      const order = await this.orderModel.findOne({ _id: id });
+
+      // check if the order exists
+      if (!order) {
+        throw new NotFoundException('Order not found');
+      }
+
+      // check if the user is the owner of the order
+      if (order.owner.toString() !== userId) {
+        throw new UnauthorizedException(
+          'You are not authorized to perfom this operation',
+        );
+      }
+
+      // increase the value of the products
+      if (updateOrderDto.status === 'CANCELLED') {
+        for (const item of [...order.products]) {
+          // check if the products exists
+          const isProductFound = await this.productModel.findOne({
+            _id: item.id,
+          });
+          if (isProductFound) {
+            await this.productModel.findOneAndUpdate(
+              { _id: item.id },
+              { stock: (isProductFound.stock += item.quantity) },
+            );
+          }
+        }
+      }
+
+      // increase/decrease the stock of new or old values
+      if (updateOrderDto.products) {
+        for (const updated of [...updateOrderDto.products]) {
+          const isProductFound = await this.productModel.findOne({
+            _id: updated.id,
+          });
+          for (const old of [...order.products]) {
+            if (updated.id.toString() === old.id.toString()) {
+              let quantity = 0;
+
+              if (updated.quantity > old.quantity) {
+                quantity += updated.quantity - old.quantity;
+                // check if the products exists
+
+                if (isProductFound) {
+                  await this.productModel.findOneAndUpdate(
+                    { _id: updated.id },
+                    { stock: (isProductFound.stock += quantity) },
+                  );
+                }
+              }
+
+              if (updated.quantity < old.quantity) {
+                quantity += old.quantity - updated.quantity;
+                if (isProductFound) {
+                  await this.productModel.findOneAndUpdate(
+                    { _id: updated.id },
+                    { stock: (isProductFound.stock -= quantity) },
+                  );
+                }
+              }
+            } else {
+              if (isProductFound) {
+                await this.productModel.findOneAndUpdate(
+                  { _id: updated.id },
+                  { stock: (isProductFound.stock += updated.quantity) },
+                );
+              }
+            }
+          }
+        }
+      }
+      const products = [];
+
+      updateOrderDto.products.forEach((item) => products.push(item));
+      const updatedOrder = await this.orderModel.findOneAndUpdate(
+        { _id: order.id },
+        { ...updateOrderDto, products: [...products] },
+        { new: true },
+      );
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: updatedOrder,
+      };
+    } catch (error) {
+      console.log(error);
       return {
         status: 'fail',
         statusCode: error.response.statusCode,

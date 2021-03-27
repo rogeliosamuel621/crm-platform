@@ -6,13 +6,14 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { OrderService } from './order.service';
 import { GetUser } from 'src/authentication/decorators/getUser.decorator';
-import { CreateOrderDto } from './dto/order.dto';
+import { CreateOrderDto, UpdateOrderDto } from './dto/order.dto';
 
 @Controller('order')
 @UseGuards(AuthGuard())
@@ -51,6 +52,22 @@ export class OrderController {
     const { status, statusCode, data, error } = await this.orderService.findOne(
       id,
       user.id,
+    );
+
+    return res.status(statusCode).json({ response: status, data, error });
+  }
+
+  @Put(':id')
+  async update(
+    @GetUser() user,
+    @Param('id') id: string,
+    @Body() updateOrderDto: UpdateOrderDto,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const { status, statusCode, data, error } = await this.orderService.update(
+      id,
+      user.id,
+      updateOrderDto,
     );
 
     return res.status(statusCode).json({ response: status, data, error });
