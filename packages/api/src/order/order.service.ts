@@ -72,4 +72,22 @@ export class OrderService {
       };
     }
   }
+
+  async findAll(userId: string): Promise<ServiceResponse> {
+    try {
+      const orders = await this.orderModel.find({ owner: userId });
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.CREATED,
+        data: orders || [],
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
 }
