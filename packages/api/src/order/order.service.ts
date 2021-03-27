@@ -1,4 +1,10 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -81,6 +87,85 @@ export class OrderService {
         status: 'success',
         statusCode: HttpStatus.CREATED,
         data: orders || [],
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
+
+  async findOne(id: string, userId: string): Promise<ServiceResponse> {
+    try {
+      const order = await this.orderModel.findOne({ _id: id });
+
+      // check if the order exists
+      if (!order) {
+        throw new NotFoundException('Order not found');
+      }
+
+      // check if the user is the owner of the order
+      if (order.owner.toString() !== userId) {
+        throw new UnauthorizedException(
+          'You are not authorized to perfom this operation',
+        );
+      }
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: order,
+      };
+    } catch (error) {
+      return {
+        status: 'fail',
+        statusCode: error.response.statusCode,
+        error: error.message,
+      };
+    }
+  }
+
+  async remove(id: string, userId: string): Promise<ServiceResponse> {
+    try {
+      const order = await this.orderModel.findOne({ _id: id });
+
+      // check if the order exists
+      if (!order) {
+        throw new NotFoundException('Order not found');
+      }
+
+      // check if the user is the owner of the order
+      if (order.owner.toString() !== userId) {
+        throw new UnauthorizedException(
+          'You are not authorized to perfom this operation',
+        );
+      }
+
+      // increase the value of the products
+      if (order.status === 'PENDING' || order.status === 'IN PROGRESS') {
+        for (const item of [...order.products]) {
+          // check if the products exists
+          const isProductFound = await this.productModel.findOne({
+            _id: item.id,
+          });
+          if (isProductFound) {
+            await this.productModel.findOneAndUpdate(
+              { _id: item.id },
+              { stock: (isProductFound.stock += item.quantity) },
+            );
+          }
+        }
+      }
+
+      // remove the order
+      await this.orderModel.findOneAndRemove({ _id: order.id });
+
+      return {
+        status: 'success',
+        statusCode: HttpStatus.OK,
+        data: 'Order deleted successfully',
       };
     } catch (error) {
       return {
