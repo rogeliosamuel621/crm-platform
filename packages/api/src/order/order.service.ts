@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, mongo } from 'mongoose';
+import { Model } from 'mongoose';
 import {
   Customer,
   CustomerDocument,
