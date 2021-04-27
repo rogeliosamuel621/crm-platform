@@ -33,9 +33,9 @@ const Alert = ({ type = 'info', message }) => {
         />
         <div
           className={`${type === 'success' ? 'text-green-200' : ''}
-          ${type === 'info' ? 'text-blue-200' : ''}
-          ${type === 'warning' ? 'text-orange-200' : ''}
-          ${type === 'danger' ? 'text-red-200' : ''}`}
+          ${type === 'info' ? 'text-blue-400 dark:text-blue-200' : ''}
+          ${type === 'warning' ? 'text-orange-400 dark:text-orange-200' : ''}
+          ${type === 'danger' ? 'text-red-400 dark:text-red-200' : ''}`}
         >
           {message}
         </div>

@@ -1,5 +1,12 @@
 import { AxiosInstance } from '../../config/axios';
-import { signIn, signInFailure, signInSuccess } from '../reducers/AuthenticationReducer';
+import {
+  signIn,
+  signInSuccess,
+  signInFailure,
+  getCurrent,
+  getCurrentSuccess,
+  getCurrentFailure
+} from '../reducers/AuthenticationReducer';
 
 export const signInAction = credentials => {
   return async dispatch => {
@@ -9,8 +16,10 @@ export const signInAction = credentials => {
       const response = await AxiosInstance.post('authentication/signin', credentials);
 
       // save the token
+      localStorage.setItem('accessToken', response.data.data);
       dispatch(signInSuccess(response.data.data));
     } catch (error) {
+      localStorage.setItem('accessToken', null);
       dispatch(signInFailure(error.response.data.error));
     }
   };
@@ -24,9 +33,27 @@ export const signUpAction = values => {
       const response = await AxiosInstance.post('authentication/signup', values);
 
       // save the token
+      localStorage.setItem('accessToken', response.data.data);
       dispatch(signInSuccess(response.data.data));
     } catch (error) {
+      localStorage.removeItem('accessToken');
       dispatch(signInFailure(error.response.data.error));
+    }
+  };
+};
+
+export const getCurrentUser = () => {
+  return async dispatch => {
+    dispatch(getCurrent());
+    try {
+      // send the request
+      const response = await AxiosInstance.get('user/me');
+
+      // save the data of the user
+      dispatch(getCurrentSuccess(response.data.data));
+    } catch (error) {
+      localStorage.removeItem('accessToken');
+      dispatch(getCurrentFailure(error.response.data.error));
     }
   };
 };
