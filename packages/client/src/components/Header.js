@@ -18,10 +18,10 @@ function Header() {
   const { toggleSidebar } = useContext(SidebarContext);
 
   const dispatch = useDispatch();
-  const { user } = useSelector(state => state.authentication);
+  const { user, state } = useSelector(state => state.authentication);
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-
+  console.log(user);
   function handleProfileClick() {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   }
@@ -83,7 +83,7 @@ function Header() {
             <Dropdown align="right" isOpen={isProfileMenuOpen} onClose={() => null}>
               <DropdownItem tag="a" href="#">
                 <OutlinePersonIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                <span>{user.name}</span>
+                {state === 'idle' ? <span>Loading...</span> : <span>{user.name}</span>}
               </DropdownItem>
               <DropdownItem onClick={() => dispatch(signOutAction())}>
                 <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />

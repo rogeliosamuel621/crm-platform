@@ -5,7 +5,7 @@ export const AuthenticationSlice = createSlice({
   initialState: {
     user: {},
     accessToken: localStorage.getItem('accessToken') || '',
-    isLogged: false,
+    isLogged: true,
     status: 'initial',
     error: null
   },
@@ -30,14 +30,13 @@ export const AuthenticationSlice = createSlice({
     },
     getCurrent: state => {
       state.status = 'idle';
-      state.isLogged = false;
-      state.accessToken = '';
+      // state.isLogged = true;
       state.user = null;
       state.error = null;
     },
     getCurrentSuccess: (state, { payload }) => {
       state.status = 'resolved';
-      state.isLogged = true;
+      // state.isLogged = true;
       state.user = payload;
     },
     getCurrentFailure: (state, { payload }) => {

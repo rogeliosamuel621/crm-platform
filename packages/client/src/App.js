@@ -17,8 +17,8 @@ function App() {
   const { status, isLogged } = useSelector(state => state.authentication);
 
   useEffect(() => {
-    dispatch(getCurrentUserAction());
-  }, []);
+    if (isLogged) dispatch(getCurrentUserAction());
+  }, [isLogged]);
 
   return (
     <>

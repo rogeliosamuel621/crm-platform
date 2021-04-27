@@ -48,7 +48,11 @@ export const getCurrentUserAction = () => {
     dispatch(getCurrent());
     try {
       // send the request
-      const response = await AxiosInstance.get('user/me');
+      const response = await AxiosInstance.get('user/me', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`
+        }
+      });
 
       // save the data of the user
       dispatch(getCurrentSuccess(response.data.data));
