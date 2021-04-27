@@ -24,6 +24,11 @@ import { ReactComponent as BellIcon } from './bell.svg';
 import { ReactComponent as MenuIcon } from './menu.svg';
 import { ReactComponent as DropdownIcon } from './dropdown.svg';
 import { ReactComponent as ProductIcon } from './product.svg';
+import { ReactComponent as SuccessIcon } from './success.svg';
+import { ReactComponent as InfoIcon } from './info.svg';
+import { ReactComponent as WarningIcon } from './warning.svg';
+import { ReactComponent as DangerIcon } from './danger.svg';
+import { ReactComponent as CloseIcon } from './close.svg';
 import { ReactComponent as OutlinePersonIcon } from './outlinePerson.svg';
 import { ReactComponent as OutlineCogIcon } from './outlineCog.svg';
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg';
@@ -55,6 +60,11 @@ export {
   MenuIcon,
   DropdownIcon,
   ProductIcon,
+  SuccessIcon,
+  InfoIcon,
+  DangerIcon,
+  WarningIcon,
+  CloseIcon,
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon

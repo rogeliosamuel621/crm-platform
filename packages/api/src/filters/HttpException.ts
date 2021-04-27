@@ -17,9 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const errors = message['message'].toString().split(',');
     const fixedErrors = errors.map((err: string): string => {
-      console.log(err.split('.').length);
       if (err.split('.').length === 3) {
-        console.log(err.split('.')[2]);
         return err.split('.')[2];
       }
       return err;

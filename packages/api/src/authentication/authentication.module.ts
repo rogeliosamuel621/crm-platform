@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationController } from './authentication.controller';
 import { PassportModule } from '@nestjs/passport';
@@ -17,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
         expiresIn: process.env.JWT_EXPIRES_IN,
       },
     }),
-    UserModule,
+    forwardRef(() => UserModule),
   ],
   providers: [AuthenticationService, JwtStrategy],
   controllers: [AuthenticationController],

@@ -15,11 +15,11 @@ import { OrderModule } from './order/order.module';
       useUnifiedTopology: true,
       useFindAndModify: false,
     }),
-    UserModule,
     AuthenticationModule,
     CustomerModule,
     ProductModule,
     OrderModule,
+    UserModule,
   ],
 })
 export class AppModule {}
