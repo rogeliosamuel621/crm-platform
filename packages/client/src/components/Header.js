@@ -21,7 +21,7 @@ function Header() {
   const { user, state } = useSelector(state => state.authentication);
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  console.log(user);
+
   function handleProfileClick() {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   }

@@ -29,6 +29,7 @@ import { ReactComponent as InfoIcon } from './info.svg';
 import { ReactComponent as WarningIcon } from './warning.svg';
 import { ReactComponent as DangerIcon } from './danger.svg';
 import { ReactComponent as CloseIcon } from './close.svg';
+import { ReactComponent as ViewIcon } from './view.svg';
 import { ReactComponent as OutlinePersonIcon } from './outlinePerson.svg';
 import { ReactComponent as OutlineCogIcon } from './outlineCog.svg';
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg';
@@ -65,6 +66,7 @@ export {
   DangerIcon,
   WarningIcon,
   CloseIcon,
+  ViewIcon,
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon

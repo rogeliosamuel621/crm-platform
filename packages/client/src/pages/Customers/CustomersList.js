@@ -11,11 +11,20 @@ import {
   Button,
   Pagination
 } from '@windmill/react-ui';
-import { EditIcon, TrashIcon } from '../../icons';
+import { EditIcon, TrashIcon, ViewIcon } from '../../icons';
 import PageTitle from '../../components/Typography/PageTitle';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCustomersAction } from '../../redux/actions/CustomersActions';
 
 const CustomersList = () => {
-  const data = [];
+  const dispatch = useDispatch();
+  const { customers } = useSelector(state => state.customers);
+
+  useEffect(() => {
+    dispatch(getCustomersAction());
+  }, []);
+
   return (
     <>
       <PageTitle>Customers</PageTitle>
@@ -30,26 +39,26 @@ const CustomersList = () => {
             </tr>
           </TableHeader>
           <TableBody>
-            {data.map((user, i) => (
+            {customers.map((customer, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
-                    <Avatar className="hidden mr-3 md:block" src={user.avatar} alt="User avatar" />
+                    {/* <Avatar className="hidden mr-3 md:block" src={user.avatar} alt="User avatar" /> */}
                     <div>
-                      <p className="font-semibold">{user.name}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{user.job}</p>
+                      <p className="font-semibold">{customer.name}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        {customer.position}
+                      </p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">$ {user.amount}</span>
+                  <span className="text-sm">{customer.email}</span>
                 </TableCell>
                 <TableCell>
-                  <Badge type={user.status}>{user.status}</Badge>
+                  <span className="text-sm">{customer.company}</span>
                 </TableCell>
-                <TableCell>
-                  <span className="text-sm">{new Date(user.date).toLocaleDateString()}</span>
-                </TableCell>
+
                 <TableCell>
                   <div className="flex items-center space-x-4">
                     <Button layout="link" size="icon" aria-label="Edit">

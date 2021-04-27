@@ -72,7 +72,7 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="New sales" value="376">
+        <InfoCard title="New orders" value="376">
           <RoundIcon
             icon={CartIcon}
             iconColorClass="text-blue-500 dark:text-blue-100"
@@ -81,7 +81,7 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Pending contacts" value="35">
+        <InfoCard title="Completed orders" value="35">
           <RoundIcon
             icon={ChatIcon}
             iconColorClass="text-teal-500 dark:text-teal-100"
