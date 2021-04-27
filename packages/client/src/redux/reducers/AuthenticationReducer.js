@@ -46,6 +46,13 @@ export const AuthenticationSlice = createSlice({
       state.accessToken = '';
       state.user = null;
       state.error = null;
+    },
+    signOut: state => {
+      state.status = 'initial';
+      state.isLogged = false;
+      state.accessToken = '';
+      state.user = null;
+      state.error = null;
     }
   }
 });
@@ -56,7 +63,8 @@ export const {
   signInFailure,
   getCurrent,
   getCurrentSuccess,
-  getCurrentFailure
+  getCurrentFailure,
+  signOut
 } = AuthenticationSlice.actions;
 
 export default AuthenticationSlice.reducer;

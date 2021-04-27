@@ -6,14 +6,19 @@ import {
   SunIcon,
   MenuIcon,
   OutlinePersonIcon,
-  OutlineCogIcon,
   OutlineLogoutIcon
 } from '../icons';
 import { Avatar, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { signOutAction } from '../redux/actions/AuthenticationActions';
+
 function Header() {
   const { mode, toggleMode } = useContext(WindmillContext);
   const { toggleSidebar } = useContext(SidebarContext);
+
+  const dispatch = useDispatch();
+  const { user } = useSelector(state => state.authentication);
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
@@ -78,13 +83,9 @@ function Header() {
             <Dropdown align="right" isOpen={isProfileMenuOpen} onClose={() => null}>
               <DropdownItem tag="a" href="#">
                 <OutlinePersonIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                <span>Profile</span>
+                <span>{user.name}</span>
               </DropdownItem>
-              <DropdownItem tag="a" href="#">
-                <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                <span>Settings</span>
-              </DropdownItem>
-              <DropdownItem onClick={() => alert('Log out!')}>
+              <DropdownItem onClick={() => dispatch(signOutAction())}>
                 <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Log out</span>
               </DropdownItem>

@@ -5,7 +5,8 @@ import {
   signInFailure,
   getCurrent,
   getCurrentSuccess,
-  getCurrentFailure
+  getCurrentFailure,
+  signOut
 } from '../reducers/AuthenticationReducer';
 
 export const signInAction = credentials => {
@@ -42,7 +43,7 @@ export const signUpAction = values => {
   };
 };
 
-export const getCurrentUser = () => {
+export const getCurrentUserAction = () => {
   return async dispatch => {
     dispatch(getCurrent());
     try {
@@ -55,5 +56,12 @@ export const getCurrentUser = () => {
       localStorage.removeItem('accessToken');
       dispatch(getCurrentFailure(error.response.data.error));
     }
+  };
+};
+
+export const signOutAction = () => {
+  return async dispatch => {
+    localStorage.removeItem('accessToken');
+    dispatch(signOut());
   };
 };

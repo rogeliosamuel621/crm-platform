@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 
 import AccessibleNavigationAnnouncer from './components/AccessibleNavigationAnnouncer';
 import Loading from './components/Loading';
-import { getCurrentUser } from './redux/actions/AuthenticationActions';
+import { getCurrentUserAction } from './redux/actions/AuthenticationActions';
 
 const Layout = lazy(() => import('./containers/Layout'));
 const Login = lazy(() => import('./pages/Login'));
@@ -17,8 +17,9 @@ function App() {
   const { status, isLogged } = useSelector(state => state.authentication);
 
   useEffect(() => {
-    dispatch(getCurrentUser());
+    dispatch(getCurrentUserAction());
   }, []);
+
   return (
     <>
       <Router>
