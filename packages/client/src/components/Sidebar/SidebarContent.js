@@ -1,23 +1,23 @@
-import React from 'react'
-import routes from '../../routes/sidebar'
-import { NavLink, Route } from 'react-router-dom'
-import * as Icons from '../../icons'
-import SidebarSubmenu from './SidebarSubmenu'
-import { Button } from '@windmill/react-ui'
+import React from 'react';
+import routes from '../../routes/sidebar';
+import { Link, NavLink, Route } from 'react-router-dom';
+import * as Icons from '../../icons';
+import SidebarSubmenu from './SidebarSubmenu';
+import { Button } from '@windmill/react-ui';
 
 function Icon({ icon, ...props }) {
-  const Icon = Icons[icon]
-  return <Icon {...props} />
+  const Icon = Icons[icon];
+  return <Icon {...props} />;
 }
 
 function SidebarContent() {
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
-      <a className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-        Windmill
-      </a>
+      <Link to="/app/dashboard" className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200">
+        T-Rex Org
+      </Link>
       <ul className="mt-6">
-        {routes.map((route) =>
+        {routes.map(route =>
           route.routes ? (
             <SidebarSubmenu route={route} key={route.name} />
           ) : (
@@ -41,16 +41,8 @@ function SidebarContent() {
           )
         )}
       </ul>
-      <div className="px-6 my-6">
-        <Button>
-          Create account
-          <span className="ml-2" aria-hidden="true">
-            +
-          </span>
-        </Button>
-      </div>
     </div>
-  )
+  );
 }
 
-export default SidebarContent
+export default SidebarContent;

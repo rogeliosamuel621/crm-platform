@@ -9,65 +9,50 @@ const routes = [
   {
     path: '/app/dashboard', // the url
     icon: 'HomeIcon', // the component being exported from icons/index.js
-    name: 'Dashboard', // name that appear in Sidebar
+    name: 'Dashboard' // name that appear in Sidebar
   },
   {
-    path: '/app/forms',
-    icon: 'FormsIcon',
-    name: 'Forms',
-  },
-  {
-    path: '/app/cards',
-    icon: 'CardsIcon',
-    name: 'Cards',
-  },
-  {
-    path: '/app/charts',
-    icon: 'ChartsIcon',
-    name: 'Charts',
-  },
-  {
-    path: '/app/buttons',
-    icon: 'ButtonsIcon',
-    name: 'Buttons',
-  },
-  {
-    path: '/app/modals',
-    icon: 'ModalsIcon',
-    name: 'Modals',
-  },
-  {
-    path: '/app/tables',
-    icon: 'TablesIcon',
-    name: 'Tables',
-  },
-  {
-    icon: 'PagesIcon',
-    name: 'Pages',
+    icon: 'PeopleIcon',
+    name: 'Customers',
     routes: [
-      // submenu
       {
-        path: '/login',
-        name: 'Login',
+        path: '/app/customers',
+        name: 'List'
       },
       {
-        path: '/create-account',
-        name: 'Create account',
-      },
-      {
-        path: '/forgot-password',
-        name: 'Forgot password',
-      },
-      {
-        path: '/app/404',
-        name: '404',
-      },
-      {
-        path: '/app/blank',
-        name: 'Blank',
-      },
-    ],
+        path: '/app/customers/create',
+        name: 'Create'
+      }
+    ]
   },
-]
+  {
+    icon: 'ProductIcon',
+    name: 'Products',
+    routes: [
+      {
+        path: '/app/products',
+        name: 'List'
+      },
+      {
+        path: '/app/products/create',
+        name: 'Create'
+      }
+    ]
+  },
+  {
+    icon: 'FormsIcon',
+    name: 'Orders',
+    routes: [
+      {
+        path: '/app/orders',
+        name: 'List'
+      },
+      {
+        path: '/app/orders/create',
+        name: 'Create'
+      }
+    ]
+  }
+];
 
-export default routes
+export default routes;

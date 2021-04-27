@@ -1,15 +1,16 @@
-import { lazy } from 'react'
+import { lazy } from 'react';
 
 // use lazy for better code splitting, a.k.a. load faster
-const Dashboard = lazy(() => import('../pages/Dashboard'))
-const Forms = lazy(() => import('../pages/Forms'))
-const Cards = lazy(() => import('../pages/Cards'))
-const Charts = lazy(() => import('../pages/Charts'))
-const Buttons = lazy(() => import('../pages/Buttons'))
-const Modals = lazy(() => import('../pages/Modals'))
-const Tables = lazy(() => import('../pages/Tables'))
-const Page404 = lazy(() => import('../pages/404'))
-const Blank = lazy(() => import('../pages/Blank'))
+const Dashboard = lazy(() => import('../pages/Dashboard'));
+const CustomersList = lazy(() => import('../pages/Customers/CustomersList'));
+const Forms = lazy(() => import('../pages/Forms'));
+const Cards = lazy(() => import('../pages/Cards'));
+const Charts = lazy(() => import('../pages/Charts'));
+const Buttons = lazy(() => import('../pages/Buttons'));
+const Modals = lazy(() => import('../pages/Modals'));
+const Tables = lazy(() => import('../pages/Tables'));
+const Page404 = lazy(() => import('../pages/404'));
+const Blank = lazy(() => import('../pages/Blank'));
 
 /**
  * ⚠ These are internal routes!
@@ -24,40 +25,44 @@ const Blank = lazy(() => import('../pages/Blank'))
 const routes = [
   {
     path: '/dashboard', // the url
-    component: Dashboard, // view rendered
+    component: Dashboard // view rendered
+  },
+  {
+    path: '/customers',
+    component: CustomersList
   },
   {
     path: '/forms',
-    component: Forms,
+    component: Forms
   },
   {
     path: '/cards',
-    component: Cards,
+    component: Cards
   },
   {
     path: '/charts',
-    component: Charts,
+    component: Charts
   },
   {
     path: '/buttons',
-    component: Buttons,
+    component: Buttons
   },
   {
     path: '/modals',
-    component: Modals,
+    component: Modals
   },
   {
     path: '/tables',
-    component: Tables,
+    component: Tables
   },
   {
     path: '/404',
-    component: Page404,
+    component: Page404
   },
   {
     path: '/blank',
-    component: Blank,
-  },
-]
+    component: Blank
+  }
+];
 
-export default routes
+export default routes;
