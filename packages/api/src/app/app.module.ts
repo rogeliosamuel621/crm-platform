@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import configObject from '../config/config-object';
 import configSchema from '../config/config-schema';
@@ -14,12 +15,22 @@ import { ProductsModule } from './products/products.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configObject],
-      validationSchema: configSchema,
+      validationSchema: configSchema
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('mongodb.uri'),
+        useFindAndModify: true,
+        useCreateIndex: true,
+        useNewUrlParser: true
+      }),
+      inject: [ConfigService]
     }),
     UsersModule,
     CustomersModule,
     OrdersModule,
-    ProductsModule,
-  ],
+    ProductsModule
+  ]
 })
 export class AppModule {}
