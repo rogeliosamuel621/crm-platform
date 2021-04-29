@@ -1,14 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import { nanoid } from 'nanoid';
 
 @Schema()
 export class User {
-  // TODO: field for the user's picture
+  _id: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: String, trim: true, required: true })
   name: string;
 
-  @Prop({ type: String, trim: true, required: true })
+  @Prop({ type: String, default: nanoid(10) })
   username: string;
 
   @Prop({ type: String, unique: true, trim: true, required: true })
