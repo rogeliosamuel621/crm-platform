@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import {
-  BadRequestException,
   Injectable,
+  BadRequestException,
   InternalServerErrorException
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,6 +10,7 @@ import * as argon2 from 'argon2';
 import { User, UserDocument } from './entities/user.entity';
 
 import { CreateUserDto } from './dto/create-user.dto';
+import { ValidateUserDto } from './dto/validate-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
@@ -40,6 +41,28 @@ export class UsersService {
       });
 
       return await user.save();
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async validate(payload: ValidateUserDto): Promise<User> {
+    const { email, password } = payload;
+
+    try {
+      // verify user exists
+      const user: User = await this.model.findOne({ email });
+      if (!user) {
+        throw new BadRequestException('The entered credentials are incorrect');
+      }
+
+      // verify that the password is correct
+      const isPasswordCorrect = await argon2.verify(user.password, password);
+      if (!isPasswordCorrect) {
+        throw new BadRequestException('The entered credentials are incorrect');
+      }
+
+      return user;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
