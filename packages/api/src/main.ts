@@ -10,7 +10,7 @@ async function bootstrap() {
   const config = app.get(ConfigService);
 
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const port: number = config.get<number>('port');
   await app.listen(port, () => {
