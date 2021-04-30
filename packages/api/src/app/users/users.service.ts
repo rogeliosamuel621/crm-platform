@@ -12,6 +12,7 @@ import { User, UserDocument } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ValidateUserDto } from './dto/validate-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -51,7 +52,7 @@ export class UsersService {
 
     try {
       // verify user exists
-      const user: User = await this.model.findOne({ email });
+      const user: User = await this.model.findOne({ email }).select('password');
       if (!user) {
         throw new BadRequestException('The entered credentials are incorrect');
       }
@@ -72,8 +73,18 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneById(payload: string): Promise<User> {
+    try {
+      // find the user by their _id
+      const user: User = await this.model.findOne({ _id: payload });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

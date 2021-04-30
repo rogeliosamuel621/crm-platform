@@ -15,7 +15,7 @@ export class User {
   @Prop({ type: String, unique: true, trim: true, required: true })
   email: string;
 
-  @Prop({ type: String, trim: true, required: true })
+  @Prop({ type: String, trim: true, required: true, select: false })
   password: string;
 
   @Prop({ type: Boolean, default: true })

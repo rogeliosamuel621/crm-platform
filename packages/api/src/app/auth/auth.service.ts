@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'app/users/entities/user.entity';
 
 import { UsersService } from 'app/users/users.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
@@ -42,6 +43,17 @@ export class AuthService {
       const accessToken: string = await this.jwtService.signAsync(jwtPayload);
 
       return accessToken;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async findCurrent(payload: string): Promise<User> {
+    try {
+      // find the current user
+      const user: User = await this.usersService.findOneById(payload);
+
+      return user;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
