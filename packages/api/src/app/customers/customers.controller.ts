@@ -12,11 +12,15 @@ import {
   HttpCode
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
+
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { FindOneCustomerParams } from './params/find-one-customer.params';
 
 @Controller('customers')
 @UseGuards(JwtAuthGuard)
@@ -36,13 +40,24 @@ export class CustomersController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  @HttpCode(200)
+  async findAll(
+    @CurrentUser() user: JwtPayload,
+    @Res() res: Response
+  ): Promise<Response> {
+    const { id } = user;
+    const data = await this.service.findAll(id);
+
+    return res.json({ response: 'success', data });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(+id);
+  @HttpCode(200)
+  findOne(
+    @CurrentUser() user: JwtPayload,
+    @Param() params: FindOneCustomerParams
+  ) {
+    return this.service.findOne(user.id, params.id);
   }
 
   @Patch(':id')

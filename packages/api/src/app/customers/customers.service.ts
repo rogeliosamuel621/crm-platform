@@ -1,5 +1,10 @@
 import { Model, Types } from 'mongoose';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { CreateCustomerDto } from './dto/create-customer.dto';
@@ -35,12 +40,29 @@ export class CustomersService {
     return await customer.save();
   }
 
-  findAll() {
-    return `This action returns all customers`;
+  async findAll(payload: string): Promise<Customer[]> {
+    // find all customers of the user
+    const customers: Customer[] = await this.model.find({ owner: payload });
+
+    return customers || [];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} customer`;
+  async findOne(userId: string, id: string): Promise<Customer> {
+    // find the requested customer
+    const customer: Customer = await this.model.findOne({ _id: id });
+
+    // throw an error if the customer doesn't exists
+    if (!customer) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    // verify that the user is the owner of the customer
+    const isUserTheOwner = `${customer.owner}` === userId;
+    if (!isUserTheOwner) {
+      throw new ForbiddenException('You cannot access this information');
+    }
+
+    return customer;
   }
 
   update(id: number, updateCustomerDto: UpdateCustomerDto) {
