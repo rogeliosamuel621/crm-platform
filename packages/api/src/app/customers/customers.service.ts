@@ -1,11 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Model, Types } from 'mongoose';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 
+import { Customer, CustomerDocument } from './entities/customer.entity';
+
 @Injectable()
 export class CustomersService {
-  create(createCustomerDto: CreateCustomerDto) {
-    return 'This action adds a new customer';
+  constructor(
+    @InjectModel(Customer.name) private readonly model: Model<CustomerDocument>
+  ) {}
+
+  async create(userId: string, payload: CreateCustomerDto): Promise<Customer> {
+    // verify if the customer email is available
+    const isEmailAlreadyInUse = await this.model.findOne({
+      email: payload.email,
+      owner: userId
+    });
+    if (isEmailAlreadyInUse) {
+      throw new BadRequestException(
+        'This email is already used by another customer'
+      );
+    }
+
+    // create a new customer object
+    const customer = new this.model({
+      ...payload,
+      owner: userId
+    });
+
+    // save and return the created customer
+    return await customer.save();
   }
 
   findAll() {

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 import { User } from '../../users/entities/user.entity';
 
 @Schema()
@@ -16,10 +16,10 @@ export class Customer {
   position?: string;
 
   @Prop({ type: String, trim: true, default: 'N/A' })
-  company: string;
+  company?: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, required: true })
-  owner: MongooseSchema.Types.ObjectId;
+  owner: Types.ObjectId;
 
   @Prop({ type: Date, default: Date.now() })
   createdAt: Date;
