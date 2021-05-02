@@ -12,7 +12,7 @@ import { JwtAuthGuard } from 'guards/jwt-auth.guard';
 
 @Controller('authentication')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly service: AuthService) {}
 
   @Post('/signin')
   @HttpCode(200)
@@ -20,7 +20,7 @@ export class AuthController {
     @Body() payload: AuthCredentialsDto,
     @Res() res: Response
   ): Promise<Response> {
-    const data = await this.authService.authenticate(payload);
+    const data = await this.service.authenticate(payload);
 
     return res.json({ response: 'success', data });
   }
@@ -31,7 +31,7 @@ export class AuthController {
     @Body() payload: RegisterUserDto,
     @Res() res: Response
   ): Promise<Response> {
-    const data = await this.authService.register(payload);
+    const data = await this.service.register(payload);
 
     return res.json({ response: 'success', data });
   }
@@ -40,7 +40,7 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   async me(@CurrentUser() user: JwtPayload, @Res() res: Response) {
-    const data = await this.authService.findCurrent(user.id);
+    const data = await this.service.findCurrent(user.id);
 
     return res.json({ response: 'success', data });
   }
