@@ -1,13 +1,13 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { User } from 'app/users/entities/user.entity';
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { User } from "app/users/entities/user.entity";
 
-import { UsersService } from 'app/users/users.service';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { UsersService } from "app/users/users.service";
+import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
 
-import { RegisterUserDto } from './dto/register-user.dto';
+import { RegisterUserDto } from "./dto/register-user.dto";
 
-import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { JwtPayload } from "./interfaces/jwt-payload.interface";
 
 @Injectable()
 export class AuthService {
@@ -25,9 +25,8 @@ export class AuthService {
 
       // generate the token
       const jwtPayload: JwtPayload = { id: `${_id}`, username, email };
-      const accessToken: string = await this.jwtService.signAsync(jwtPayload);
+      return await this.jwtService.signAsync(jwtPayload);
 
-      return accessToken;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -40,9 +39,8 @@ export class AuthService {
 
       // generate the token
       const jwtPayload: JwtPayload = { id: `${_id}`, username, email };
-      const accessToken: string = await this.jwtService.signAsync(jwtPayload);
+      return await this.jwtService.signAsync(jwtPayload);
 
-      return accessToken;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
