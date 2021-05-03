@@ -70,6 +70,7 @@ export class CustomersService {
     id: string,
     payload: UpdateCustomerDto
   ): Promise<Customer> {
+    // make sure that the customer exists
     await this.findOne(userId, id);
 
     // update the customer
@@ -82,7 +83,13 @@ export class CustomersService {
     );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  async remove(userId: string, id: string): Promise<string> {
+    // make sure that the customer exists
+    await this.findOne(userId, id);
+
+    // delete the customer
+    await this.model.findOneAndRemove({ _id: id });
+
+    return 'Customer deleted successfully';
   }
 }

@@ -22,6 +22,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { FindOneCustomerParams } from './params/find-one-customer.params';
 import { UpdateCustomerParams } from './params/update-customer.params';
+import { RemoveCustomerParams } from './params/remove-customer.params';
 
 @Controller('customers')
 @UseGuards(JwtAuthGuard)
@@ -65,6 +66,7 @@ export class CustomersController {
   }
 
   @Patch(':id')
+  @HttpCode(200)
   async update(
     @CurrentUser() user: JwtPayload,
     @Param() params: UpdateCustomerParams,
@@ -77,7 +79,14 @@ export class CustomersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(+id);
+  @HttpCode(200)
+  async remove(
+    @CurrentUser() user: JwtPayload,
+    @Param() params: RemoveCustomerParams,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.remove(user.id, params.id);
+
+    return res.json({ response: 'success', data });
   }
 }
