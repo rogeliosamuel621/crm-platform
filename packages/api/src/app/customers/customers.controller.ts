@@ -21,6 +21,7 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { FindOneCustomerParams } from './params/find-one-customer.params';
+import { UpdateCustomerParams } from './params/update-customer.params';
 
 @Controller('customers')
 @UseGuards(JwtAuthGuard)
@@ -53,19 +54,26 @@ export class CustomersController {
 
   @Get(':id')
   @HttpCode(200)
-  findOne(
+  async findOne(
     @CurrentUser() user: JwtPayload,
-    @Param() params: FindOneCustomerParams
-  ) {
-    return this.service.findOne(user.id, params.id);
+    @Param() params: FindOneCustomerParams,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.findOne(user.id, params.id);
+
+    return res.json({ response: 'success', data });
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCustomerDto: UpdateCustomerDto
-  ) {
-    return this.service.update(+id, updateCustomerDto);
+  async update(
+    @CurrentUser() user: JwtPayload,
+    @Param() params: UpdateCustomerParams,
+    @Body() payload: UpdateCustomerDto,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.update(user.id, params.id, payload);
+
+    return res.json({ response: 'success', data });
   }
 
   @Delete(':id')

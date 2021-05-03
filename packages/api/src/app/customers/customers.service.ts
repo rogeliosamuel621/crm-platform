@@ -65,8 +65,21 @@ export class CustomersService {
     return customer;
   }
 
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
+  async update(
+    userId: string,
+    id: string,
+    payload: UpdateCustomerDto
+  ): Promise<Customer> {
+    await this.findOne(userId, id);
+
+    // update the customer
+    return this.model.findOneAndUpdate(
+      {
+        _id: id
+      },
+      { ...payload },
+      { new: true }
+    );
   }
 
   remove(id: number) {
