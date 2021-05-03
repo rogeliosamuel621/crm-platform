@@ -20,6 +20,7 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+
 import { FindOneCustomerParams } from './params/find-one-customer.params';
 import { UpdateCustomerParams } from './params/update-customer.params';
 import { RemoveCustomerParams } from './params/remove-customer.params';
