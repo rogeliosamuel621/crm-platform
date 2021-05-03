@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -21,12 +25,29 @@ export class ProductsService {
     return await product.save();
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(userId: string): Promise<Product[]> {
+    // find all products of the user
+    const products: Product[] = await this.model.find({ owner: userId });
+
+    return products || [];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(userId: string, id: string): Promise<Product> {
+    // find the requested product
+    const product: Product = await this.model.findOne({ _id: id });
+
+    // throw an error if the product doesn't exists
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    // verify that the user is the owner of the product
+    const isUserTheOwner = `${product.owner}` === userId;
+    if (!isUserTheOwner) {
+      throw new ForbiddenException('You cannot access this information');
+    }
+
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
