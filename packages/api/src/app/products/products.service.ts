@@ -1,13 +1,15 @@
+import { Model } from 'mongoose';
 import {
   ForbiddenException,
   Injectable,
   NotFoundException
 } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+
+import { Product, ProductDocument } from './entities/product.entity';
+
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Product, ProductDocument } from './entities/product.entity';
-import { Model } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -50,8 +52,20 @@ export class ProductsService {
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(
+    userId: string,
+    id: string,
+    payload: UpdateProductDto
+  ): Promise<Product> {
+    // make sure that the product exists
+    await this.findOne(userId, id);
+
+    // update and return the updated product
+    return this.model.findOneAndUpdate(
+      { _id: id },
+      { ...payload },
+      { new: true }
+    );
   }
 
   async remove(userId: string, id: string): Promise<string> {

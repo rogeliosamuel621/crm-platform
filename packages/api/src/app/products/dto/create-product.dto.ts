@@ -24,12 +24,12 @@ export class CreateProductDto {
     { maxDecimalPlaces: 2 },
     { message: 'The $property has an invalid value' }
   )
-  price: string;
+  price: number;
 
   @Type(() => Number)
   @IsNotEmpty({ message: 'The $property is required' })
   @IsPositive()
   @Min(0)
   @IsInt({ message: 'The $property has an invalid value' })
-  stock: string;
+  stock: number;
 }

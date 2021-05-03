@@ -22,7 +22,7 @@ import { AuthModule } from './auth/auth.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         uri: configService.get<string>('mongodb.uri'),
-        useFindAndModify: true,
+        useFindAndModify: false,
         useCreateIndex: true,
         useNewUrlParser: true
       }),

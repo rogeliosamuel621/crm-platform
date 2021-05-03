@@ -20,8 +20,10 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+
 import { FindOneProductParams } from './params/find-one-product.params';
 import { RemoveProductParams } from './params/remove-product.params';
+import { UpdateProductParams } from './params/update-product.params';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
@@ -64,8 +66,15 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.service.update(+id, updateProductDto);
+  async update(
+    @CurrentUser() user: JwtPayload,
+    @Param() params: UpdateProductParams,
+    @Body() payload: UpdateProductDto,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.update(user.id, params.id, payload);
+
+    return res.json({ response: 'success', data });
   }
 
   @Delete(':id')
