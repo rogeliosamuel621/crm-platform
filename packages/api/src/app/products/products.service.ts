@@ -54,7 +54,13 @@ export class ProductsService {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(userId: string, id: string): Promise<string> {
+    // make sure that the product exists
+    await this.findOne(userId, id);
+
+    // delete the product
+    await this.model.findOneAndRemove({ _id: id });
+
+    return 'Product deleted successfully';
   }
 }
