@@ -5,6 +5,7 @@ import { OrderStatusEnum } from '../enums/order-status.enum';
 
 import { Customer } from '../../customers/entities/customer.entity';
 import { User } from '../../users/entities/user.entity';
+import { OrderedProduct } from './ordered-product.entity';
 
 @Schema()
 export class Order {
@@ -19,7 +20,10 @@ export class Order {
     default: OrderStatusEnum.OPEN,
     enum: Object.values(OrderStatusEnum)
   })
-  status: string;
+  status: OrderStatusEnum;
+
+  @Prop({ type: () => [OrderedProduct], required: true })
+  products: OrderedProduct[];
 
   @Prop({ type: Number, min: 0, required: true })
   total: number;
