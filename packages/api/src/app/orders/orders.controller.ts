@@ -1,3 +1,5 @@
+import { Response } from 'express';
+
 import {
   Controller,
   Get,
@@ -5,19 +7,35 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  UseGuards,
+  HttpCode,
+  Res
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+
 import { OrdersService } from './orders.service';
+
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 
 @Controller('orders')
+@UseGuards(JwtAuthGuard)
 export class OrdersController {
   constructor(private readonly service: OrdersService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.service.create(createOrderDto);
+  @HttpCode(201)
+  async create(
+    @CurrentUser() user: JwtPayload,
+    @Body() payload: CreateOrderDto,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.create(user.id, payload);
+
+    return res.json({ response: 'success', data });
   }
 
   @Get()
