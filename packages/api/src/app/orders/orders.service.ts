@@ -71,8 +71,11 @@ export class OrdersService {
     return await order.save();
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  async findAll(payload: string): Promise<Order[]> {
+    // find all orders of the user
+    const orders: Order[] = await this.model.find({ seller: payload });
+
+    return orders || [];
   }
 
   findOne(id: number) {

@@ -39,8 +39,14 @@ export class OrdersController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  @HttpCode(200)
+  async findAll(
+    @CurrentUser() user: JwtPayload,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.findAll(user.id);
+
+    return res.json({ response: 'success', data });
   }
 
   @Get(':id')
