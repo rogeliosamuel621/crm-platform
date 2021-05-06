@@ -1,20 +1,20 @@
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './filters/HttpException';
+import { ConfigService } from '@nestjs/config';
+import { Logger, ValidationPipe } from '@nestjs/common';
+
+import { AppModule } from './app/app.module';
+import { HttpExceptionFilter } from 'filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const config = app.get(ConfigService);
 
-  // set a global filter
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  // set a global pipe
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  // enable cors
-  app.enableCors({ origin: process.env.FRONTEND_URL, credentials: true });
-
-  await app.listen(parseInt(process.env.PORT, 10));
+  const port: number = config.get<number>('port');
+  await app.listen(port, () => {
+    Logger.log(`Listening at http://localhost:${port}/`);
+  });
 }
 bootstrap();
