@@ -20,6 +20,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { FindOneOrderParams } from './params/find-one-order.params';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
@@ -50,8 +51,15 @@ export class OrdersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(+id);
+  @HttpCode(200)
+  async findOne(
+    @CurrentUser() user: JwtPayload,
+    @Param() params: FindOneOrderParams,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.findOne(user.id, params.id);
+
+    return res.json({ response: 'success', data });
   }
 
   @Patch(':id')

@@ -78,8 +78,14 @@ export class OrdersService {
     return orders || [];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(userId: string, id: string): Promise<Order> {
+    // find the requested order
+    const order: Order = await this.model.findOne({ _id: id, seller: userId });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return order;
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
