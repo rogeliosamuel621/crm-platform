@@ -18,9 +18,12 @@ import { OrdersService } from './orders.service';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+
 import { FindOneOrderParams } from './params/find-one-order.params';
+import { UpdateOrderParams } from './params/update-order.params';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
@@ -63,8 +66,16 @@ export class OrdersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.service.update(+id, updateOrderDto);
+  @HttpCode(200)
+  async update(
+    @CurrentUser() user: JwtPayload,
+    @Param() params: UpdateOrderParams,
+    @Body() payload: UpdateOrderDto,
+    @Res() res: Response
+  ): Promise<Response> {
+    const data = await this.service.update(user.id, params.id, payload);
+
+    return res.json({ response: 'success', data });
   }
 
   @Delete(':id')
